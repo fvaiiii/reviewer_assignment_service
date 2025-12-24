@@ -1,1 +1,1 @@
-# reviewer_assignment_service
+# pr_reviewer_assignment_service
