@@ -6,5 +6,3 @@ type PullRequestShort struct {
 	AuthorId        string `json:"author_id"`
 	Status          string `json:"status"`
 }
-
-type PullRequestShortStatus string

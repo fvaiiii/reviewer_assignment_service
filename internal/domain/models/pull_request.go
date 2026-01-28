@@ -11,15 +11,3 @@ type PullRequest struct {
 	CreatedAt         time.Time `json:"created_at,omitempty"`
 	MergedAt          time.Time `json:"merged_at,omitempty"`
 }
-
-type PullRequestStatus string
-
-const (
-	PullRequestStatusOpen   PullRequestStatus = "OPEN"
-	PullRequestStatusMerged PullRequestStatus = "MERGED"
-)
-
-const (
-	MaxReviewersPerPR = 2
-	MinReviewersPerPR = 0
-)
