@@ -22,6 +22,22 @@ func NewUserRepo() *UsersRepo {
 	}
 }
 
+func (r *UsersRepo) AddUsers(user *models.User) error {
+	if user == nil || user.UserId == "" {
+		return errors.New("invalid user")
+	}
+
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	if _, exists := r.users[user.UserId]; exists {
+		return errors.New("user already exists: " + user.UserId)
+	}
+
+	r.users[user.UserId] = user
+	return nil
+}
+
 func (r *UsersRepo) SaveUser(ctx context.Context, user *models.User) error {
 	if user == nil {
 		return errors.New("[repository] user is nil")
@@ -49,9 +65,9 @@ func (r *UsersRepo) GetUserByID(ctx context.Context, userID string) (*models.Use
 	return user, nil
 }
 
-func (r *UsersRepo) UpdateUserActivity(ctx context.Context, userID string, isActive bool) error {
+func (r *UsersRepo) UpdateUserActivity(ctx context.Context, userID string, isActive bool) (*models.User, error) {
 	if userID == "" {
-		return errors.New("[repository] userID is empty")
+		return nil, errors.New("[repository] userID is empty")
 	}
 
 	r.mu.Lock()
@@ -59,11 +75,11 @@ func (r *UsersRepo) UpdateUserActivity(ctx context.Context, userID string, isAct
 
 	user, ok := r.users[userID]
 	if !ok {
-		return errors.New("[repository] user not found")
+		return nil, errors.New("[repository] user not found")
 	}
 
 	user.IsActive = isActive
-	return nil
+	return user, nil
 }
 
 func (r *UsersRepo) ListUsersByTeam(ctx context.Context, teamName string) ([]*models.User, error) {

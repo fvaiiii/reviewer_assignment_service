@@ -15,15 +15,15 @@ type TeamRepository interface {
 
 type UserRepository interface {
 	SaveUser(ctx context.Context, user *models.User) error
-	GetUserByID(ctx context.Context, userId string) (*models.User, error)
-	UpdateUserActivity(ctx context.Context, userId string, isActive bool) error
+	GetUserByID(ctx context.Context, userID string) (*models.User, error)
+	UpdateUserActivity(ctx context.Context, userID string, isActive bool) (*models.User, error)
 	ListUsersByTeam(ctx context.Context, teamName string) ([]*models.User, error)
 }
 
 type PullRequestRepository interface {
 	SavePR(ctx context.Context, pr *models.PullRequest) error
 	GetPRByID(ctx context.Context, prId string) (*models.PullRequest, error)
-	UpdateStatusMerged(ctx context.Context, prId string, mergedAt time.Time) error
+	UpdateStatusMerged(ctx context.Context, prID string, mergedAt time.Time) error
 	UpdatePRReviewers(ctx context.Context, prID string, reviewers []string) error
 	ListByReviewer(ctx context.Context, userID string) ([]*models.PullRequestShort, error)
 }
