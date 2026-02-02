@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/fvaiiii/reviewer_assignment_service/internal/domain"
 	"github.com/fvaiiii/reviewer_assignment_service/internal/domain/models"
 )
 
@@ -13,7 +14,7 @@ func (s *Service) CreateTeam(ctx context.Context, team *models.Team) error {
 	}
 	_, err := s.teamRepo.GetTeamByName(ctx, team.TeamName)
 	if err == nil {
-		return fmt.Errorf("[service] team already exists")
+		return domain.ErrTeamExists
 	}
 	err = s.teamRepo.SaveTeam(ctx, team)
 	if err != nil {
@@ -48,9 +49,12 @@ func (s *Service) CreateTeam(ctx context.Context, team *models.Team) error {
 }
 
 func (s *Service) GetTeam(ctx context.Context, teamName string) (*models.Team, error) {
+	if teamName == "" {
+		return nil, fmt.Errorf("[service] teamName is empty")
+	}
 	team, err := s.teamRepo.GetTeamByName(ctx, teamName)
 	if err != nil {
-		return nil, fmt.Errorf("[service] get team by name: %w", err)
+		return nil, domain.ErrNotFound
 	}
 
 	return team, nil
