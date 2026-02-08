@@ -1,10 +1,10 @@
 package models
 
 type APIError struct {
-	Code    string `json:"code"`
-	Message string `json:"message"`
+	Code    string
+	Message string
 }
 
 type ErrorResponse struct {
-	Error APIError `json:"error"`
+	Error APIError
 }
