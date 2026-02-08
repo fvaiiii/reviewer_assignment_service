@@ -8,7 +8,7 @@ type Service struct {
 	prRepo   repository.PullRequestsRepo
 }
 
-func NewTeamService(
+func NewService(
 	teamRepo repository.TeamsRepo,
 	userRepo repository.UsersRepo,
 	prRepo repository.PullRequestsRepo) *Service {

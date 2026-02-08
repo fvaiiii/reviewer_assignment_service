@@ -24,6 +24,22 @@ func NewPullRequestRepo() *PullRequestsRepo {
 	}
 }
 
+func (r *PullRequestsRepo) AddPRs(pr *models.PullRequest) error {
+	if pr == nil || pr.PullRequestId == "" {
+		return errors.New("invalid pr")
+	}
+
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	if _, exists := r.prs[pr.PullRequestId]; exists {
+		return errors.New("pr already exists: " + pr.PullRequestId)
+	}
+
+	r.prs[pr.PullRequestId] = pr
+	return nil
+}
+
 func (r *PullRequestsRepo) SavePR(ctx context.Context, pr *models.PullRequest) error {
 	if pr == nil {
 		return errors.New("[repository] pr is nil")

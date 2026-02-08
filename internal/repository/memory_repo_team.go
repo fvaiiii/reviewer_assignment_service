@@ -22,6 +22,22 @@ func NewTeamRepo() *TeamsRepo {
 	}
 }
 
+func (r *TeamsRepo) AddTeams(team *models.Team) error {
+	if team == nil || team.TeamName == "" {
+		return errors.New("invalid team")
+	}
+
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	if _, exists := r.teams[team.TeamName]; exists {
+		return errors.New("team already exists: " + team.TeamName)
+	}
+
+	r.teams[team.TeamName] = team
+	return nil
+}
+
 func (r *TeamsRepo) SaveTeam(ctx context.Context, team *models.Team) error {
 	if team == nil {
 		return errors.New("[repository] team is nil")
