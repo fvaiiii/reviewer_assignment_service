@@ -43,8 +43,7 @@ type CreateTeamResponse struct {
 }
 
 type GetTeamResponse struct {
-	TeamName string          `json:"team_name"`
-	Members  []TeamMemberDTO `json:"members"`
+	Team TeamDTO `json:"team"`
 }
 
 type SetIsActiveRequest struct {
