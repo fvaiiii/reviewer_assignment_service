@@ -50,7 +50,7 @@ func (h *Handler) SetIsActive(c *gin.Context) {
 	c.JSON(http.StatusOK, resp)
 }
 
-func (h *Handler) GerReview(c *gin.Context) {
+func (h *Handler) GetReview(c *gin.Context) {
 	userID := c.Query("user_id")
 	if userID == "" {
 		writeError(
