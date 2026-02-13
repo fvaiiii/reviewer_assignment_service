@@ -25,26 +25,26 @@ type Database struct {
 }
 
 type HTTPServer struct {
-	Address     string        `yaml:"address" env-default:"localhost:8080"`
-	Timeout     time.Duration `yaml:"timeout" env-default:"4s"`
-	IdleTimeout time.Duration `yaml:"idle_timeout" env-default:"60s"`
-	User        string        `yaml:"user" env-required:"true"`
-	Password    string        `yaml:"password" env-required:"true"`
+	Address      string        `yaml:"address" env-default:"localhost:8080"`
+	Timeout      time.Duration `yaml:"timeout" env-default:"4s"`
+	ReadTimeout  time.Duration `yaml:"read_timeout" env-default:"6s"`
+	WriteTimeout time.Duration `yaml:"write_timeout" env-default:"15s"`
+	IdleTimeout  time.Duration `yaml:"idle_timeout" env-default:"60s"`
 }
 
 func MustLoad() *Config {
 	configPath := os.Getenv("CONFIG_PATH")
 	if configPath == "" {
-		log.Fatal("[internal/config] CONFIG_PATH is not set")
+		log.Fatal("[config] CONFIG_PATH is not set")
 	}
 
 	if _, err := os.Stat(configPath); err != nil {
-		log.Fatalf("[internal/config] config file does not exist: %s", configPath)
+		log.Fatalf("[config] config file does not exist: %s", configPath)
 	}
 
 	var cfg Config
 	if err := cleanenv.ReadConfig(configPath, &cfg); err != nil {
-		log.Fatalf("[internal/config] cannot read config: %s", configPath)
+		log.Fatalf("[config] cannot read config: %s", configPath)
 	}
 	return &cfg
 }

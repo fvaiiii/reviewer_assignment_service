@@ -5,17 +5,22 @@ import (
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/fvaiiii/reviewer_assignment_service/internal/config"
 )
 
 type Server struct {
 	httpServer *http.Server
 }
 
-func NewServer(addr string, handler http.Handler) *Server {
+func NewServer(cfg config.HTTPServer, handler http.Handler) *Server {
 	return &Server{
 		httpServer: &http.Server{
-			Addr:    addr,
-			Handler: handler,
+			Addr:         cfg.Address,
+			Handler:      handler,
+			ReadTimeout:  cfg.ReadTimeout,
+			WriteTimeout: cfg.WriteTimeout,
+			IdleTimeout:  cfg.IdleTimeout,
 		},
 	}
 }
