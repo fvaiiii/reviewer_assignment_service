@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 	"os/signal"
@@ -10,8 +11,9 @@ import (
 	httpapi "github.com/fvaiiii/reviewer_assignment_service/internal/api/http"
 	"github.com/fvaiiii/reviewer_assignment_service/internal/api/http/handlers"
 	"github.com/fvaiiii/reviewer_assignment_service/internal/config"
-	"github.com/fvaiiii/reviewer_assignment_service/internal/repository"
+	"github.com/fvaiiii/reviewer_assignment_service/internal/repository/postgres"
 	"github.com/fvaiiii/reviewer_assignment_service/internal/service"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/joho/godotenv"
 )
 
@@ -27,31 +29,39 @@ func main() {
 	cfg := config.MustLoad()
 	log.Println("config loaded")
 
-	// in memory
-	userRepo := repository.NewUserRepo()
+	dsn := fmt.Sprintf(
+		"postgres://%s:%s@%s:%d/%s?sslmode=%s",
+		cfg.Database.User,
+		cfg.Database.Password,
+		cfg.Database.Host,
+		cfg.Database.Port,
+		cfg.Database.Name,
+		cfg.Database.SSLMode,
+	)
 
-	// seedtest
-	// _ = seedtest.SeedTestDataUser(userRepo)
+	pool, err := pgxpool.New(ctx, dsn)
+	if err != nil {
+		log.Fatalf("failed to connect db: %v", err)
+	}
 
-	// user, _ := userRepo.GetUserByID(ctx, "11111111")
+	if err := pool.Ping(ctx); err != nil {
+		log.Fatalf("failed to ping db: %v", err)
+	}
 
-	teamRepo := repository.NewTeamRepo()
-	// _ = seedtest.SeedTestDataTeam(teamRepo)
+	log.Println("database connected")
 
-	// team, _ := teamRepo.GetTeamByName(ctx, "team1")
+	defer pool.Close()
 
-	prRepo := repository.NewPullRequestRepo()
-	// _ = seedtest.SeedTestDataPR(prRepo)
+	// postgres
+	userRepo := postgres.NewUserRepository(pool)
+	teamRepo := postgres.NewTeamRepository(pool)
+	prRepo := postgres.NewPrRepository(pool)
 
-	// pr, _ := prRepo.GetPRByID(ctx, "111")
-
-	// service
 	svc := service.NewService(
 		teamRepo,
 		userRepo,
 		prRepo,
 	)
-	// res, err := svc.GetTeam(ctx, team.TeamName)
 
 	handler := handlers.NewHandler(svc)
 
