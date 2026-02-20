@@ -80,6 +80,7 @@ func (r *TeamRepository) GetTeamByName(ctx context.Context, teamName string) (*m
 		if err == pgx.ErrNoRows {
 			return nil, fmt.Errorf("team not found")
 		}
+		return nil, fmt.Errorf("get team: %w", err)
 	}
 
 	if err := json.Unmarshal(membersJson, team.Members); err != nil {

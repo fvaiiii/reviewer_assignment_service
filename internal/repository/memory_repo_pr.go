@@ -24,7 +24,7 @@ func NewPullRequestRepo() *PullRequestsRepo {
 	}
 }
 
-func (r *PullRequestsRepo) AddPRs(pr *models.PullRequest) error {
+func (r *PullRequestsRepo) AddPRs(ctx context.Context, pr *models.PullRequest) error {
 	if pr == nil || pr.PullRequestId == "" {
 		return errors.New("invalid pr")
 	}

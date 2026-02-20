@@ -22,7 +22,7 @@ func NewUserRepo() *UsersRepo {
 	}
 }
 
-func (r *UsersRepo) AddUsers(user *models.User) error {
+func (r *UsersRepo) AddUsers(ctx context.Context, user *models.User) error {
 	if user == nil || user.UserId == "" {
 		return errors.New("invalid user")
 	}

@@ -22,7 +22,7 @@ func NewTeamRepo() *TeamsRepo {
 	}
 }
 
-func (r *TeamsRepo) AddTeams(team *models.Team) error {
+func (r *TeamsRepo) AddTeams(ctx context.Context, team *models.Team) error {
 	if team == nil || team.TeamName == "" {
 		return errors.New("invalid team")
 	}
