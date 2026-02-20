@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"context"
 	"log"
 	"time"
 
@@ -24,12 +25,12 @@ func SeedTestDataUser(repo *repository.UsersRepo) error {
 		IsActive: true,
 	}
 
-	if err := repo.AddUsers(user1); err != nil {
+	if err := repo.AddUsers(context.Background(), user1); err != nil {
 		log.Printf("Failed to add user1: %w", err)
 		return err
 	}
 
-	if err := repo.AddUsers(user2); err != nil {
+	if err := repo.AddUsers(context.Background(), user2); err != nil {
 		log.Printf("Failed to add user2: %w", err)
 		return err
 	}
@@ -61,12 +62,12 @@ func SeedTestDataTeam(repo *repository.TeamsRepo) error {
 		},
 	}
 
-	if err := repo.AddTeams(team1); err != nil {
+	if err := repo.AddTeams(context.Background(), team1); err != nil {
 		log.Printf("Failed to add team1: %w", err)
 		return err
 	}
 
-	if err := repo.AddTeams(team2); err != nil {
+	if err := repo.AddTeams(context.Background(), team2); err != nil {
 		log.Printf("Failed to add team2: %w", err)
 		return err
 	}
@@ -86,7 +87,7 @@ func SeedTestDataPR(repo *repository.PullRequestsRepo) error {
 		MergedAt:          time.Time{},
 	}
 
-	if err := repo.AddPRs(pr1); err != nil {
+	if err := repo.AddPRs(context.Background(), pr1); err != nil {
 		log.Printf("Failed to add pr1: %w", err)
 		return err
 	}
